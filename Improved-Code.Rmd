@@ -1,0 +1,146 @@
+---
+title: "Improved Code: Exercise_Set 1"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org/"))
+
+# Load necessary packages
+install.packages("tidyverse")
+library(tidyverse)
+
+install.packages("ggplot2")
+library(ggplot2)
+
+ install.packages("kableExtra")
+library(kableExtra)
+
+```
+
+# Problem 1: Exploring Anscombe’s Quartet
+
+## Understanding the Dataset
+Anscombe’s Quartet demonstrates how summary statistics can be misleading and highlights the importance of data visualization. 
+
+```{r load_anscombe}
+# Load dataset
+anscombe_quartet <- readRDS("anscombe quartet.rds")
+
+# Inspect the dataset structure
+str(anscombe_quartet)
+```
+
+**What does `str()` do?**
+The `str()` function displays the internal structure of an R object, providing an overview of its type, dimensions, and data format.
+
+## Summary Statistics
+```{r summary_anscombe}
+summary_table <- anscombe_quartet %>% 
+  group_by(dataset) %>% 
+  summarise(
+    mean_x = mean(x),
+    mean_y = mean(y),
+    min_x = min(x),
+    min_y = min(y),
+    max_x = max(x),
+    max_y = max(y),
+    correlation = cor(x, y)
+  )
+
+# Display summary statistics as a nicely formatted table
+summary_table %>% kable(caption = "Summary Statistics of Anscombe’s Quartet") %>% kable_styling()
+```
+
+**What do the summary statistics tell us?**
+Despite having nearly identical means, variances, and correlations, the datasets are structurally very different. This emphasizes the importance of visualization.
+
+## Visualizing the Data
+```{r plot_anscombe}
+anscombe_plot <- ggplot(anscombe_quartet, aes(x = x, y = y)) +
+  geom_point(color = "blue", size = 2) + 
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+  facet_wrap(~dataset) +
+  theme_minimal() +
+  labs(title = "Anscombe’s Quartet Visualization", x = "X Values", y = "Y Values")
+
+print(anscombe_plot)
+```
+
+## Saving the Plot
+```{r save_anscombe, eval=TRUE}
+ggsave("anscombe_quartet.png", anscombe_plot, width = 5, height = 5, dpi = 300)
+```
+
+**Interpretation of Plots:**
+- Each dataset has the same summary statistics but vastly different distributions.
+- Some show non-linear trends, while others have outliers that influence correlations.
+- This reinforces why **visualizing data** is crucial before making conclusions.
+
+**Would linear regression be appropriate?**
+- In some cases, yes (e.g., dataset 1), but others display non-linearity or outliers that violate regression assumptions.
+
+# Problem 2: Exploring the Datasaurus Dozen
+
+## Load and Inspect Data
+```{r load_datasaurus}
+datasaurus_dozen <- readRDS("datasaurus_dozen.rds")
+
+# Structure of the dataset
+str(datasaurus_dozen)
+```
+
+## Summary Statistics for Datasaurus Dozen
+```{r summary_datasaurus}
+datasaurus_summary <- datasaurus_dozen %>% 
+  group_by(dataset) %>% 
+  summarise(
+    mean_x = mean(x),
+    mean_y = mean(y),
+    min_x = min(x),
+    min_y = min(y),
+    max_x = max(x),
+    max_y = max(y),
+    correlation = cor(x, y)
+  )
+
+# Display summary in a styled table
+kable(datasaurus_summary, caption = "Summary Statistics of Datasaurus Dozen") %>% kable_styling()
+```
+
+## Visualizing the Different Datasets
+```{r plot_datasaurus}
+datasaurus_plot <- ggplot(datasaurus_dozen, aes(x = x, y = y)) +
+  geom_point(color = "purple", alpha = 0.6) + 
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "orange") +
+  facet_wrap(~dataset, scales = "free") +
+  theme_minimal() +
+  labs(title = "Datasaurus Dozen Visualization", x = "X Values", y = "Y Values")
+
+print(datasaurus_plot)
+```
+
+## Save the Plot
+```{r save_datasaurus, eval=TRUE}
+ggsave("datasaurus_dozen.png", datasaurus_plot, width = 6, height = 6, dpi = 300)
+```
+
+**Observations:**
+- Even though datasets have similar summary statistics, their visual patterns vary significantly.
+- Some datasets form shapes (e.g., a dinosaur!), while others show distinct trends.
+- Again, this highlights why **visualization matters** beyond summary statistics.
+
+# Conclusion
+- Summary statistics alone can be misleading; always visualize your data.
+- Linear regression isn't always the best choice—check for patterns, outliers, and non-linear relationships.
+- Graphs provide insights that numbers alone cannot!
+
+---
+This document is rendered as **HTML** and **PDF** to showcase results in different formats. 
+
+
