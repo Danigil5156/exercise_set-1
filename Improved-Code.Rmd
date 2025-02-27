@@ -12,13 +12,13 @@ output:
 options(repos = c(CRAN = "https://cloud.r-project.org/"))
 
 # Load necessary packages
-install.packages("tidyverse")
+#install.packages("tidyverse")
 library(tidyverse)
 
-install.packages("ggplot2")
+#install.packages("ggplot2")
 library(ggplot2)
 
- install.packages("kableExtra")
+ #install.packages("kableExtra")
 library(kableExtra)
 
 ```
@@ -30,7 +30,7 @@ Anscombe’s Quartet demonstrates how summary statistics can be misleading and h
 
 ```{r load_anscombe}
 # Load dataset
-anscombe_quartet <- readRDS("anscombe quartet.rds")
+anscombe_quartet <- readRDS("data/anscombe quartet.rds")
 
 # Inspect the dataset structure
 str(anscombe_quartet)
@@ -142,5 +142,6 @@ ggsave("datasaurus_dozen.png", datasaurus_plot, width = 6, height = 6, dpi = 300
 
 ---
 This document is rendered as **HTML** and **PDF** to showcase results in different formats. 
+
 
 
